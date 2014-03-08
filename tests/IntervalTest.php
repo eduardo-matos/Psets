@@ -36,8 +36,10 @@ class IntervalTest extends PHPUnit_Framework_TestCase
 
     public function test_overlaps_should_be_true_if_two_intervals_overlap_each_other()
     {
-        $interval1 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-02 00:00:00'));
-        $interval2 = new Interval($this->_dt('2014-01-01 05:00:00'), $this->_dt('2014-01-01 20:00:00'));
+        // interval 1 ----------
+        // interval 2      ----------
+        $interval1 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-02 10:00:00'));
+        $interval2 = new Interval($this->_dt('2014-01-01 05:00:00'), $this->_dt('2014-01-01 15:00:00'));
 
         $this->assertTrue($interval1->overlaps($interval2));
         $this->assertTrue($interval2->overlaps($interval1));
@@ -46,8 +48,10 @@ class IntervalTest extends PHPUnit_Framework_TestCase
 
     public function test_overlaps_should_be_false_if_two_intervals_dont_overlap_each_other()
     {
-        $interval1 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-02 00:00:00'));
-        $interval2 = new Interval($this->_dt('2014-01-03 00:00:00'), $this->_dt('2014-01-04 00:00:00'));
+        // interval 1 -----
+        // interval 2           -----
+        $interval1 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 05:00:00'));
+        $interval2 = new Interval($this->_dt('2014-01-01 10:00:00'), $this->_dt('2014-01-01 15:00:00'));
 
         $this->assertFalse($interval1->overlaps($interval2));
         $this->assertFalse($interval2->overlaps($interval1));
@@ -55,8 +59,10 @@ class IntervalTest extends PHPUnit_Framework_TestCase
 
     public function test_overlaps_should_be_false_if_two_intervals_overlap_each_other_on_the_edge()
     {
-        $interval1 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-02 00:00:00'));
-        $interval2 = new Interval($this->_dt('2014-01-02 00:00:00'), $this->_dt('2014-01-03 00:00:00'));
+        // interval 1 -----
+        // interval 2      -----
+        $interval1 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 05:00:00'));
+        $interval2 = new Interval($this->_dt('2014-01-01 05:00:00'), $this->_dt('2014-01-03 10:00:00'));
 
         $this->assertFalse($interval1->overlaps($interval2));
         $this->assertFalse($interval2->overlaps($interval1));
