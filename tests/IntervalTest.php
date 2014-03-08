@@ -134,6 +134,31 @@ class IntervalTest extends PHPUnit_Framework_TestCase
 
     }
 
+    public function test_union_should_return_intervalset_aggregating_both_intervals()
+    {
+        // interval 1 -----
+        // interval 2     -----
+        // expected   ---------
+        $interval1 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 06:00:00'));
+        $interval2 = new Interval($this->_dt('2014-01-01 05:00:00'), $this->_dt('2014-01-01 10:00:00'));
+        $expected = new IntervalSet([
+            new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 10:00:00')),
+        ]);
+        $this->assertEquals($expected, $interval1->union($interval2));
+
+        // interval 1 -----
+        // interval 2       -----
+        // expected   ----- -----
+        $interval1 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 05:00:00'));
+        $interval2 = new Interval($this->_dt('2014-01-01 06:00:00'), $this->_dt('2014-01-01 11:00:00'));
+        $expected = new IntervalSet([
+            new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 05:00:00')),
+            new Interval($this->_dt('2014-01-01 06:00:00'), $this->_dt('2014-01-01 11:00:00')),
+        ]);
+        $this->assertEquals($expected, $interval1->union($interval2));
+
+    }
+
     protected function _dt($timestamp, $timezone = 'UTC')
     {
         return new DateTime($timestamp, new DateTimeZone($timezone));

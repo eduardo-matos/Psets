@@ -71,4 +71,30 @@ class Interval
         }
 
     }
+
+    public function union(Interval $other)
+    {
+        $thisStart = clone($this->getStart());
+        $thisEnd = clone($this->getEnd());
+        $otherStart = clone($other->getStart());
+        $otherEnd = clone($other->getEnd());
+
+        if($this->overlaps($other)) {
+            $start = $thisStart < $otherStart? $thisStart: $otherStart;
+            $end = $thisEnd > $otherEnd? $thisEnd: $otherEnd;
+            return new IntervalSet(new Interval($start, $end));
+        }
+
+        if($thisEnd < $otherStart) {
+            return new IntervalSet([
+                new Interval($thisStart, $thisEnd),
+                new Interval($otherStart, $otherEnd),
+            ]);
+        } else {
+            return new IntervalSet([
+                new Interval($otherStart, $otherEnd),
+                new Interval($thisStart, $thisEnd),
+            ]);            
+        }
+    }
 }
