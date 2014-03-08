@@ -11,6 +11,7 @@ class Interval
     {
         $this->_start = $start;
         $this->_end = $end;
+
     }
 
     public function getStart()
@@ -25,6 +26,7 @@ class Interval
 
     public function getPeriod()
     {
-        
+        $intervalo = $this->_end->diff($this->_start);
+        return $intervalo->days * 60 * 60 *  24;
     }
 }

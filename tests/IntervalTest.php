@@ -16,10 +16,10 @@ class IntervalTest extends PHPUnit_Framework_TestCase
 
     public function test_get_interval_period_should_return_in_seconds()
     {
-        $start = new DateTime('2014-01-01 00:00:00');
-        $end = new DateTime('2014-01-02 00:00:00');
+        $UTC = new DateTimeZone('UTC');
+        $start = new DateTime ('2014-01-01 00:00:00', $UTC);
+        $end = new DateTime('2014-01-02 00:00:00', $UTC);
         $interval = new Interval($start, $end);
-
         $this->assertEquals($interval->getPeriod(), 86400);
     }
 }
