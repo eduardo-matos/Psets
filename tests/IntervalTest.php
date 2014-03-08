@@ -5,11 +5,6 @@ use Psets\IntervalSet;
 
 class IntervalTest extends PHPUnit_Framework_TestCase
 {
-    public function setUp()
-    {
-        $this->_start = new DateTime('2014-01-01 00:00:00', new DateTimeZone('UTC'));
-        $this->_end = new DateTime('2014-01-02 00:00:00', new DateTimeZone('UTC'));
-    }
 
     public function test_interval_has_start_and_end()
     {
