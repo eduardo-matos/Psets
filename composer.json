@@ -1,0 +1,23 @@
+{
+    "name": "eduardo/psets",
+    "require-dev": {
+        "phpunit/phpunit": "~3.7"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Eduardo Matos",
+            "email": "edu.de.matos@hotmail.com"
+        },
+        {
+            "name": "Lucian Fialho",
+            "email": "lucianfialhobp@hotmail.com"
+        }
+    ],
+    "require": {
+
+    },
+    "autoload": {
+        "psr-0": { "Psets\\": "" }
+    }
+}
