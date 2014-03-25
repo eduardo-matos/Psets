@@ -4,14 +4,63 @@ namespace Psets;
 
 class IntervalSet
 {
-    protected $_intervals = [];
+    public $intervals = [];
 
     public function __construct($intervals = null)
     {
-        if(is_array($intervals)) {
-            $this->_intervals = $intervals;
-        } else if ($intervals instanceof Interval) {
-            $this->_intervals = [$intervals];
+        if(!is_array($intervals)) {
+            $intervals = [$intervals];
         }
+
+        $orderedIntervals = $this->_order($intervals);
+        $collapsedIntervals = $this->_collapse($orderedIntervals);
+
+        $this->intervals = $collapsedIntervals;
+    }
+
+    public function union(IntervalSet $other)
+    {
+        $int = array_merge($this->intervals, $other->intervals);
+        $orderedIntervals = $this->_order($int);
+        $collapsedIntervals = $this->_collapse($orderedIntervals);
+
+        $this->intervals = $collapsedIntervals;
+    }
+
+    public function _order($intervals)
+    {
+        usort($intervals, function ($one, $other)
+        {
+            if($one == $other) {
+                return 0;
+            }
+
+            return $one->getStart() < $other->getStart()? -1: 1;
+        });
+
+        return $intervals;
+    }
+
+    public function _collapse($intervals)
+    {
+        $r = [];
+
+        foreach ($intervals as $key => $interval) {
+            if($key === 0) {
+                $r[] = $interval;
+                continue;
+            }
+
+            $baseKey = count($r) - 1;
+            $baseValue = end($r);
+
+            if($interval->overlaps($baseValue) OR $interval->isAdjacent($baseValue)) {
+                $r[$baseKey] = $interval->union($baseValue);
+            } else {
+                $r[] = $interval;
+            }
+        }
+
+        return $r;
     }
 }

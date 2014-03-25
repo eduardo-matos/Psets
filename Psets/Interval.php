@@ -35,7 +35,7 @@ class Interval
 
     public function overlaps(Interval $other)
     {
-        if($this->getEnd() < $other->getStart() OR $other->getEnd() < $this->getStart()) {
+        if($this->getEnd() <= $other->getStart() OR $other->getEnd() <= $this->getStart()) {
             return false;
         } else {
             return $this->getEnd() > $other->getStart() OR $other->getEnd() > $this->getStart();
@@ -79,8 +79,7 @@ class Interval
         $otherStart = clone($other->getStart());
         $otherEnd = clone($other->getEnd());
 
-        // overlaps or touch on begin or end
-        if($this->overlaps($other)) {
+        if($this->overlaps($other) OR $this->isAdjacent($other)) {
             $start = $thisStart < $otherStart? $thisStart: $otherStart;
             $end = $thisEnd > $otherEnd? $thisEnd: $otherEnd;
             return new Interval($start, $end);
@@ -97,5 +96,39 @@ class Interval
                 new Interval($thisStart, $thisEnd),
             ]);            
         }
+    }
+
+    public function isAdjacent(Interval $other)
+    {
+        $thisStart = $this->getStart();
+        $thisEnd = $this->getEnd();
+        $otherStart = $other->getStart();
+        $otherEnd = $other->getEnd();
+
+        if($this->overlaps($other)) {
+            return false;
+        } else if($thisStart == $otherEnd OR $otherStart == $thisEnd) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function comesBefore(Interval $other)
+    {
+        $thisStart = $this->getStart();
+        $thisEnd = $this->getEnd();
+        $otherStart = $other->getStart();
+        $otherEnd = $other->getEnd();
+
+        if($this->isAdjacent($other) AND $thisStart < $otherStart) {
+            return true;
+        } else if($this->overlaps($other)) {
+            return false;
+        } else if($thisStart > $otherEnd OR $otherStart > $thisEnd) {
+            return true;
+        }
+
+        return false;
     }
 }

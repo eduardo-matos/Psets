@@ -56,15 +56,15 @@ class IntervalTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($interval2->overlaps($interval1));
     }
 
-    public function test_overlaps_should_be_true_if_two_intervals_overlap_each_other_on_the_edge()
+    public function test_overlaps_should_be_false_if_two_intervals_overlap_each_other_on_the_edge()
     {
         // interval 1 -----
         // interval 2      -----
         $interval1 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 05:00:00'));
         $interval2 = new Interval($this->_dt('2014-01-01 05:00:00'), $this->_dt('2014-01-03 10:00:00'));
 
-        $this->assertTrue($interval1->overlaps($interval2));
-        $this->assertTrue($interval2->overlaps($interval1));
+        $this->assertFalse($interval1->overlaps($interval2));
+        $this->assertFalse($interval2->overlaps($interval1));
     }
 
     public function test_diff_should_be_new_interval_from_main_interval_subtracted_by_second_interval()
@@ -175,6 +175,63 @@ class IntervalTest extends PHPUnit_Framework_TestCase
         $expected = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 10:00:00'));
         $this->assertEquals($expected, $interval1->union($interval2));
         $this->assertEquals($expected, $interval2->union($interval1));
+    }
+
+    public function test_isAdjacent_returns_true_when_intervals_are_next_to_each_ther()
+    {
+        // interval 1 -----
+        // interval 2      -----
+        $interval1 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 05:00:00'));
+        $interval2 = new Interval($this->_dt('2014-01-01 05:00:00'), $this->_dt('2014-01-01 10:00:00'));
+        $this->assertTrue($interval1->isAdjacent($interval2));
+        $this->assertTrue($interval2->isAdjacent($interval1));
+    }
+
+    public function test_isAdjacent_returns_false_when_intervals_overlap()
+    {
+        // interval 1 -----
+        // interval 2      -----
+        $interval1 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 06:00:00'));
+        $interval2 = new Interval($this->_dt('2014-01-01 05:00:00'), $this->_dt('2014-01-01 10:00:00'));
+        $this->assertFalse($interval1->isAdjacent($interval2));
+        $this->assertFalse($interval2->isAdjacent($interval1));
+    }
+
+    public function test_isAdjacent_returns_false_when_intervals_dont_touch_each_other()
+    {
+        // interval 1 -----
+        // interval 2      -----
+        $interval1 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 03:00:00'));
+        $interval2 = new Interval($this->_dt('2014-01-01 05:00:00'), $this->_dt('2014-01-01 10:00:00'));
+        $this->assertFalse($interval1->isAdjacent($interval2));
+        $this->assertFalse($interval2->isAdjacent($interval1));
+    }
+
+    public function test_comesBefore_returns_true_if_entire_interval_comes_before()
+    {
+        // interval 1 -----
+        // interval 2       -----
+        $interval1 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 05:00:00'));
+        $interval2 = new Interval($this->_dt('2014-01-01 06:00:00'), $this->_dt('2014-01-01 10:00:00'));
+        $this->assertTrue($interval1->comesBefore($interval2));
+    }
+
+    public function test_comesBefore_returns_true_if_interval_are_adjacent()
+    {
+        // interval 1 -----
+        // interval 2      -----
+        $interval1 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 05:00:00'));
+        $interval2 = new Interval($this->_dt('2014-01-01 05:00:00'), $this->_dt('2014-01-01 10:00:00'));
+        $this->assertTrue($interval1->comesBefore($interval2));
+    }
+
+    public function test_comesBefore_returns_false_if_interval_doesnt_come_before()
+    {
+        // interval 1 -----
+        // interval 2      -----
+        $interval1 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 05:00:00'));
+        $interval2 = new Interval($this->_dt('2014-01-01 05:00:00'), $this->_dt('2014-01-01 10:00:00'));
+        $this->assertFalse($interval2->comesBefore($interval1));
     }
 
     protected function _dt($timestamp, $timezone = 'UTC')
