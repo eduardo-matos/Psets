@@ -45,7 +45,6 @@ class IntervalTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($interval2->overlaps($interval1));
     }
 
-
     public function test_overlaps_should_be_false_if_two_intervals_dont_overlap_each_other()
     {
         // interval 1 -----
@@ -57,17 +56,16 @@ class IntervalTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($interval2->overlaps($interval1));
     }
 
-    public function test_overlaps_should_be_false_if_two_intervals_overlap_each_other_on_the_edge()
+    public function test_overlaps_should_be_true_if_two_intervals_overlap_each_other_on_the_edge()
     {
         // interval 1 -----
         // interval 2      -----
         $interval1 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 05:00:00'));
         $interval2 = new Interval($this->_dt('2014-01-01 05:00:00'), $this->_dt('2014-01-03 10:00:00'));
 
-        $this->assertFalse($interval1->overlaps($interval2));
-        $this->assertFalse($interval2->overlaps($interval1));
+        $this->assertTrue($interval1->overlaps($interval2));
+        $this->assertTrue($interval2->overlaps($interval1));
     }
-
 
     public function test_diff_should_be_new_interval_from_main_interval_subtracted_by_second_interval()
     {
@@ -76,7 +74,7 @@ class IntervalTest extends PHPUnit_Framework_TestCase
         // expected   -----
         $interval1 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 10:00:00'));
         $interval2 = new Interval($this->_dt('2014-01-01 05:00:00'), $this->_dt('2014-01-01 15:00:00'));
-        $expected = new IntervalSet(new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 05:00:00')));
+        $expected = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 05:00:00'));
         $this->assertEquals($expected, $interval1->diff($interval2));
 
         // interval 1      ----------
@@ -84,12 +82,12 @@ class IntervalTest extends PHPUnit_Framework_TestCase
         // expected             -----
         $interval1 = new Interval($this->_dt('2014-01-01 05:00:00'), $this->_dt('2014-01-01 15:00:00'));
         $interval2 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 10:00:00'));
-        $expected = new IntervalSet(new Interval($this->_dt('2014-01-01 10:00:00'), $this->_dt('2014-01-01 15:00:00')));
+        $expected = new Interval($this->_dt('2014-01-01 10:00:00'), $this->_dt('2014-01-01 15:00:00'));
         $this->assertEquals($expected, $interval1->diff($interval2));
 
     }
 
-    public function test_diff_should_be_empty_resultset_if_both_intervals_are_same()
+    public function test_diff_should_be_empty_intervalset_if_both_intervals_are_same()
     {
         // interval 1 ----------
         // interval 2 ----------
@@ -98,6 +96,7 @@ class IntervalTest extends PHPUnit_Framework_TestCase
         $interval2 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 10:00:00'));
         $expected = new IntervalSet;
         $this->assertEquals($expected, $interval1->diff($interval2));
+        $this->assertEquals($expected, $interval2->diff($interval1));
 
     }
 
@@ -108,8 +107,8 @@ class IntervalTest extends PHPUnit_Framework_TestCase
         // expected   -----
         $interval1 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 05:00:00'));
         $interval2 = new Interval($this->_dt('2014-01-01 07:00:00'), $this->_dt('2014-01-01 12:00:00'));
-        $expected = new IntervalSet([new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 05:00:00'))]);
-        $this->assertEquals($expected, $interval1->diff($interval2));
+        $this->assertEquals($interval1, $interval1->diff($interval2));
+        $this->assertEquals($interval2, $interval2->diff($interval1));
 
     }
 
@@ -140,18 +139,19 @@ class IntervalTest extends PHPUnit_Framework_TestCase
 
     }
 
-    public function test_union_should_return_intervalset_aggregating_both_intervals()
+    public function test_union_should_return_interval_aggregating_both_intervals()
     {
         // interval 1 -----
         // interval 2     -----
         // expected   ---------
         $interval1 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 06:00:00'));
         $interval2 = new Interval($this->_dt('2014-01-01 05:00:00'), $this->_dt('2014-01-01 10:00:00'));
-        $expected = new IntervalSet([
-            new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 10:00:00')),
-        ]);
+        $expected = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 10:00:00'));
         $this->assertEquals($expected, $interval1->union($interval2));
+    }
 
+    public function test_union_should_return_intervalset_when_there_is_more_than_one_resulting_interval()
+    {
         // interval 1 -----
         // interval 2       -----
         // expected   ----- -----
@@ -163,6 +163,18 @@ class IntervalTest extends PHPUnit_Framework_TestCase
         ]);
         $this->assertEquals($expected, $interval1->union($interval2));
 
+    }
+
+    public function test_union_should_return_single_interval_when_intervals_touch_on_the_edge()
+    {
+        // interval 1 -----
+        // interval 2      -----
+        // expected   ----------
+        $interval1 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 06:00:00'));
+        $interval2 = new Interval($this->_dt('2014-01-01 06:00:00'), $this->_dt('2014-01-01 10:00:00'));
+        $expected = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 10:00:00'));
+        $this->assertEquals($expected, $interval1->union($interval2));
+        $this->assertEquals($expected, $interval2->union($interval1));
     }
 
     protected function _dt($timestamp, $timezone = 'UTC')

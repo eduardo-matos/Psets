@@ -35,7 +35,7 @@ class Interval
 
     public function overlaps(Interval $other)
     {
-        if($this->getEnd() <= $other->getStart() OR $other->getEnd() <= $this->getStart()) {
+        if($this->getEnd() < $other->getStart() OR $other->getEnd() < $this->getStart()) {
             return false;
         } else {
             return $this->getEnd() > $other->getStart() OR $other->getEnd() > $this->getStart();
@@ -45,7 +45,7 @@ class Interval
     public function diff(Interval $other)
     {
         if(!$this->overlaps($other)) {
-            return new IntervalSet(clone($this));
+            return clone($this);
         }
 
         $thisStart = clone($this->getStart());
@@ -65,9 +65,9 @@ class Interval
         }
 
         if($thisStart <= $otherStart) {
-            return new IntervalSet(new Interval($thisStart, $otherStart));
+            return new Interval($thisStart, $otherStart);
         } else {
-            return new IntervalSet(new Interval($otherEnd, $thisEnd));
+            return new Interval($otherEnd, $thisEnd);
         }
 
     }
@@ -79,10 +79,11 @@ class Interval
         $otherStart = clone($other->getStart());
         $otherEnd = clone($other->getEnd());
 
+        // overlaps or touch on begin or end
         if($this->overlaps($other)) {
             $start = $thisStart < $otherStart? $thisStart: $otherStart;
             $end = $thisEnd > $otherEnd? $thisEnd: $otherEnd;
-            return new IntervalSet(new Interval($start, $end));
+            return new Interval($start, $end);
         }
 
         if($thisEnd < $otherStart) {
