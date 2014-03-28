@@ -157,6 +157,7 @@ class IntervalTest extends PHPUnit_Framework_TestCase
             new Interval($this->_dt('2014-01-01 06:00:00'), $this->_dt('2014-01-01 11:00:00')),
         ]);
         $this->assertEquals($expected, $interval1->union($interval2));
+        $this->assertEquals($expected, $interval2->union($interval1));
 
     }
 
@@ -226,6 +227,15 @@ class IntervalTest extends PHPUnit_Framework_TestCase
         // interval 2      -----
         $interval1 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 05:00:00'));
         $interval2 = new Interval($this->_dt('2014-01-01 05:00:00'), $this->_dt('2014-01-01 10:00:00'));
+        $this->assertFalse($interval2->comesBefore($interval1));
+    }
+
+    public function test_comesBefore_returns_false_if_intervals_overlap()
+    {
+        // interval 1 -----
+        // interval 2     -----
+        $interval1 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 05:00:00'));
+        $interval2 = new Interval($this->_dt('2014-01-01 04:00:00'), $this->_dt('2014-01-01 10:00:00'));
         $this->assertFalse($interval2->comesBefore($interval1));
     }
 

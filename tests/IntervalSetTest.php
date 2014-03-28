@@ -39,6 +39,7 @@ class IntervalSetTest extends PHPUnit_Framework_TestCase
     {
         $is1 = new IntervalSet([
             new Interval($this->_dt('2014-01-01 02:00:00'), $this->_dt('2014-01-01 04:00:00')),
+            new Interval($this->_dt('2014-01-01 02:00:00'), $this->_dt('2014-01-01 04:00:00')),
             new Interval($this->_dt('2014-01-01 04:00:00'), $this->_dt('2014-01-01 06:00:00')),
             new Interval($this->_dt('2014-01-01 06:00:00'), $this->_dt('2014-01-01 08:00:00')),
             new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 10:00:00')),
