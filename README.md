@@ -1,4 +1,4 @@
-# Psets [![Build Status](https://travis-ci.org/eduardo-matos/Psets.png?branch=master)](https://travis-ci.org/eduardo-matos/Psets)
+# Psets [![Build Status](https://travis-ci.org/eduardo-matos/Psets.png?branch=master)](https://travis-ci.org/eduardo-matos/Psets) [![Coverage Status](https://coveralls.io/repos/eduardo-matos/Psets/badge.png?branch=master)](https://coveralls.io/r/eduardo-matos/Psets?branch=master)
 Working with sets of DateTime intervals in PHP.
 
 ## Testing
