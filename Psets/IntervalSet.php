@@ -60,6 +60,21 @@ class IntervalSet
         return new IntervalSet($results);
     }
 
+    public function intersect(IntervalSet $other)
+    {
+        $results = [];
+        foreach ($this->intervals as $thisInterval) {
+            foreach ($other->intervals as $otherInterval) {
+                $currentIntersect = $thisInterval->intersect($otherInterval);
+                if($currentIntersect) {
+                    $results[] = $currentIntersect;
+                }
+            }
+        }
+
+        return new IntervalSet($results);
+    }
+
     public function _order($intervals)
     {
         usort($intervals, function ($one, $other)
