@@ -8,6 +8,10 @@ class IntervalSet
 
     public function __construct($intervals = null)
     {
+        if(!$intervals) {
+            return;
+        }
+
         if(!is_array($intervals)) {
             $intervals = [$intervals];
         }
@@ -73,6 +77,17 @@ class IntervalSet
         }
 
         return new IntervalSet($results);
+    }
+
+    public function getLength()
+    {
+        $totalLength = 0;
+
+        foreach ($this->intervals as $interval) {
+            $totalLength += $interval->getLength();
+        }
+
+        return $totalLength;
     }
 
     public function _order($intervals)

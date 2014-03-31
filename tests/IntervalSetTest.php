@@ -161,6 +161,25 @@ class IntervalSetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $is2->intersect($is1));
     }
 
+    public function test_get_intervalset_length()
+    {
+        // intervalset ---  ---
+        $is = new IntervalSet([
+            new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 03:00:00')),
+            new Interval($this->_dt('2014-01-01 05:00:00'), $this->_dt('2014-01-01 08:00:00')),
+        ]);
+
+        $expected = 6*3600;
+
+        $this->assertEquals($expected, $is->getLength());
+    }
+
+    public function test_get_intervalset_length_should_return_zero_when_intervalset_is_empty()
+    {
+        $is = new IntervalSet;
+        $this->assertEquals(0, $is->getLength());
+    }
+
     protected function _dt($timestamp, $timezone = 'UTC')
     {
         return new DateTime($timestamp, new DateTimeZone($timezone));
