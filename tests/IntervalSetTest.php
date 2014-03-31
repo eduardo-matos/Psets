@@ -113,6 +113,29 @@ class IntervalSetTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $is1);
     }
 
+    public function test_diff($value='')
+    {
+        // intervalset 1 ---  ---
+        // intervalset 2   ---- ---
+        // diff          --    -
+        $is1 = new IntervalSet([
+            new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 03:00:00')),
+            new Interval($this->_dt('2014-01-01 05:00:00'), $this->_dt('2014-01-01 08:00:00')),
+        ]);
+
+        $is2 = new IntervalSet([
+            new Interval($this->_dt('2014-01-01 02:00:00'), $this->_dt('2014-01-01 06:00:00')),
+            new Interval($this->_dt('2014-01-01 07:00:00'), $this->_dt('2014-01-01 10:00:00')),
+        ]);
+
+        $expected = new IntervalSet([
+            new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 02:00:00')),
+            new Interval($this->_dt('2014-01-01 06:00:00'), $this->_dt('2014-01-01 07:00:00')),
+        ]);
+
+        $this->assertEquals($expected, $is1->diff($is2));
+    }
+
     protected function _dt($timestamp, $timezone = 'UTC')
     {
         return new DateTime($timestamp, new DateTimeZone($timezone));

@@ -27,6 +27,39 @@ class IntervalSet
         $this->intervals = $collapsedIntervals;
     }
 
+    public function diff(IntervalSet $other)
+    {
+        $diffs = [];
+        $thisIntervals = $this->intervals;
+        $otherIntervals = $other->intervals;
+
+        foreach ($thisIntervals as $thisInterval) {
+            $currentDiffs = [];
+
+            foreach ($otherIntervals as $otherInterval) {
+                $currentDiffs[] = $thisInterval->diff($otherInterval);
+            }
+
+            $diffs[] = $currentDiffs;
+        }
+
+        $results  =[];
+        foreach ($diffs as $diffGroup) {
+            $groupDiffIntersection = null;
+            foreach ($diffGroup as $diff) {
+                if(!$groupDiffIntersection) {
+                    $groupDiffIntersection = $diff;
+                } else {
+                    $groupDiffIntersection = $groupDiffIntersection->intersect($diff);
+                }
+            }
+
+            $results[] = $groupDiffIntersection;
+        }
+
+        return new IntervalSet($results);
+    }
+
     public function _order($intervals)
     {
         usort($intervals, function ($one, $other)
