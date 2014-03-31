@@ -298,6 +298,27 @@ class IntervalTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($interval2->intersect($interval1));
     }
 
+    public function test_intersect_when_intervals_touch_on_start_or_on_end()
+    {
+        // interval 1 -----
+        // interval 2 ---------
+        $interval1 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 05:00:00'));
+        $interval2 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 10:00:00'));
+        $expected = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 05:00:00'));
+
+        $this->assertEquals($expected, $interval1->intersect($interval2));
+        $this->assertEquals($expected, $interval2->intersect($interval1));
+
+        // interval 1 -----
+        // interval 2 ---
+        $interval1 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 05:00:00'));
+        $interval2 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 03:00:00'));
+        $expected = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 03:00:00'));
+
+        $this->assertEquals($expected, $interval1->intersect($interval2));
+        $this->assertEquals($expected, $interval2->intersect($interval1));
+    }
+
     protected function _dt($timestamp, $timezone = 'UTC')
     {
         return new DateTime($timestamp, new DateTimeZone($timezone));

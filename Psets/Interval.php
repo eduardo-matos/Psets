@@ -133,10 +133,10 @@ class Interval
             return false;
         }
 
-        if($thisEnd > $otherEnd AND $thisStart < $otherStart) {
+        if($thisEnd >= $otherEnd AND $thisStart <= $otherStart) {
             // this contains other
             return clone($other);
-        } else if($otherEnd > $thisEnd AND $otherStart < $thisStart) {
+        } else if($otherEnd >= $thisEnd AND $otherStart <= $thisStart) {
             // other contains this
             return clone($this);
         }
