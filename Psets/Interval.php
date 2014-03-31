@@ -28,7 +28,7 @@ class Interval
         return $this->_end;
     }
 
-    public function getPeriod()
+    public function getLength()
     {
         return $this->_end->format('U') - $this->_start->format('U');
     }

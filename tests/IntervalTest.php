@@ -14,10 +14,10 @@ class IntervalTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($this->_dt('2014-01-02 00:00:00'), $interval->getEnd());
     }
 
-    public function test_get_interval_period_should_return_in_seconds()
+    public function test_get_interval_length_should_return_in_seconds()
     {
         $interval = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-02 00:00:00'));
-        $this->assertEquals(86400, $interval->getPeriod());
+        $this->assertEquals(86400, $interval->getLength());
     }
 
     public function test_end_date_is_always_greater_than_or_equal_to_start_date()
