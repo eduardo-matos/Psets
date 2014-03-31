@@ -131,4 +131,34 @@ class Interval
 
         return false;
     }
+
+    public function intersect(Interval $other)
+    {
+        $thisStart = $this->getStart();
+        $thisEnd = $this->getEnd();
+        $otherStart = $other->getStart();
+        $otherEnd = $other->getEnd();
+
+        if(!$this->overlaps($other)) {
+            return false;
+        }
+
+        if($thisEnd > $otherEnd AND $thisStart < $otherStart) {
+            // this contains other
+            return clone($other);
+        } else if($otherEnd > $thisEnd AND $otherStart < $thisStart) {
+            // other contains this
+            return clone($this);
+        }
+
+        if($thisStart < $otherStart) {
+            $intersectionStart = $otherStart;
+            $intersectionEnd = $thisEnd;
+        } else {
+            $intersectionStart = $thisStart;
+            $intersectionEnd = $otherEnd;
+        }
+
+        return new Interval($intersectionStart, $intersectionEnd);
+    }
 }
