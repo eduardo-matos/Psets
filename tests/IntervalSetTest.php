@@ -5,6 +5,15 @@ use Psets\IntervalSet;
 
 class IntervalSetTest extends PHPUnit_Framework_TestCase
 {
+    public function test_intervalset_accepts_single_interval_as_argument()
+    {
+        $i1 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 05:00:00'));
+        $is1 = new IntervalSet($i1);
+        $is2 = new IntervalSet([$i1]);
+
+        $this->assertEquals($is1, $is2);
+    }
+
     public function test_intervalset_is_always_ordered()
     {
         $i1 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 05:00:00'));
