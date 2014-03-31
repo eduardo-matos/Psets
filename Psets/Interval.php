@@ -48,10 +48,8 @@ class Interval
             return clone($this);
         }
 
-        $thisStart = clone($this->getStart());
-        $thisEnd = clone($this->getEnd());
-        $otherStart = clone($other->getStart());
-        $otherEnd = clone($other->getEnd());
+        list($thisStart, $thisEnd, $otherStart, $otherEnd) =
+            $this->_listStartEnd($this, $other);
 
         if($thisStart < $otherStart AND $thisEnd > $otherEnd) {
             return new IntervalSet([
@@ -74,10 +72,8 @@ class Interval
 
     public function union(Interval $other)
     {
-        $thisStart = clone($this->getStart());
-        $thisEnd = clone($this->getEnd());
-        $otherStart = clone($other->getStart());
-        $otherEnd = clone($other->getEnd());
+        list($thisStart, $thisEnd, $otherStart, $otherEnd) =
+            $this->_listStartEnd($this, $other);
 
         if($this->overlaps($other) OR $this->isAdjacent($other)) {
             $start = $thisStart < $otherStart? $thisStart: $otherStart;
@@ -100,10 +96,8 @@ class Interval
 
     public function isAdjacent(Interval $other)
     {
-        $thisStart = $this->getStart();
-        $thisEnd = $this->getEnd();
-        $otherStart = $other->getStart();
-        $otherEnd = $other->getEnd();
+        list($thisStart, $thisEnd, $otherStart, $otherEnd) =
+            $this->_listStartEnd($this, $other);
 
         if($this->overlaps($other)) {
             return false;
@@ -116,10 +110,8 @@ class Interval
 
     public function comesBefore(Interval $other)
     {
-        $thisStart = $this->getStart();
-        $thisEnd = $this->getEnd();
-        $otherStart = $other->getStart();
-        $otherEnd = $other->getEnd();
+        list($thisStart, $thisEnd, $otherStart, $otherEnd) =
+            $this->_listStartEnd($this, $other);
 
         if($this->isAdjacent($other) AND $thisStart < $otherStart) {
             return true;
@@ -134,10 +126,8 @@ class Interval
 
     public function intersect(Interval $other)
     {
-        $thisStart = $this->getStart();
-        $thisEnd = $this->getEnd();
-        $otherStart = $other->getStart();
-        $otherEnd = $other->getEnd();
+        list($thisStart, $thisEnd, $otherStart, $otherEnd) =
+            $this->_listStartEnd($this, $other);
 
         if(!$this->overlaps($other)) {
             return false;
@@ -160,5 +150,15 @@ class Interval
         }
 
         return new Interval($intersectionStart, $intersectionEnd);
+    }
+
+    protected function _listStartEnd(Interval $interval1, Interval $interval2)
+    {
+        $interval1Start = clone($interval1->getStart());
+        $interval1End = clone($interval1->getEnd());
+        $interval2Start = clone($interval2->getStart());
+        $interval2End = clone($interval2->getEnd());
+
+        return [$interval1Start, $interval1End, $interval2Start, $interval2End];
     }
 }
