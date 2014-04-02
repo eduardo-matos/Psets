@@ -41,27 +41,39 @@ class IntervalSet
             $currentDiffs = [];
 
             foreach ($otherIntervals as $otherInterval) {
-                $currentDiffs[] = $thisInterval->diff($otherInterval);
+                $result = $thisInterval->diff($otherInterval);
+                $currentDiffs[] = $result instanceof IntervalSet? $result: new IntervalSet($result);
             }
 
             $diffs[] = $currentDiffs;
         }
 
-        $results  =[];
+        $intervalSetResults = [];
         foreach ($diffs as $diffGroup) {
             $groupDiffIntersection = null;
             foreach ($diffGroup as $diff) {
                 if(!$groupDiffIntersection) {
                     $groupDiffIntersection = $diff;
                 } else {
-                    $groupDiffIntersection = $groupDiffIntersection->intersect($diff);
+                    $intersectionResult = $groupDiffIntersection->intersect($diff);
+                    $groupDiffIntersection = $intersectionResult;
                 }
+
             }
 
-            $results[] = $groupDiffIntersection;
+            $intervalSetResults[] = $groupDiffIntersection;
         }
 
-        return new IntervalSet($results);
+        $intersectionUnion = null;
+        foreach ($intervalSetResults as $intervalSet) {
+            if(!$intersectionUnion) {
+                $intersectionUnion = $intervalSet;
+            } else {
+                $intersectionUnion->union($intervalSet);
+            }
+        }
+
+        return $intersectionUnion;
     }
 
     public function intersect(IntervalSet $other)
