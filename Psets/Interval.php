@@ -10,7 +10,7 @@ class Interval
     public function __construct(\DateTime $start, \DateTime $end)
     {
         if($end < $start) {
-            list($start, $end) = [$end, $start];
+            list($start, $end) = array($end, $start);
         }
 
         $this->_start = $start;
@@ -52,10 +52,10 @@ class Interval
             $this->_listStartEnd($this, $other);
 
         if($thisStart < $otherStart AND $thisEnd > $otherEnd) {
-            return new IntervalSet([
+            return new IntervalSet(array(
                 new Interval($thisStart, $otherStart),
                 new Interval($otherEnd, $thisEnd),
-            ]);
+            ));
         }
 
         if($thisStart >= $otherStart AND $thisEnd <= $otherEnd) {
@@ -82,15 +82,15 @@ class Interval
         }
 
         if($thisEnd < $otherStart) {
-            return new IntervalSet([
+            return new IntervalSet(array(
                 new Interval($thisStart, $thisEnd),
                 new Interval($otherStart, $otherEnd),
-            ]);
+            ));
         } else {
-            return new IntervalSet([
+            return new IntervalSet(array(
                 new Interval($otherStart, $otherEnd),
                 new Interval($thisStart, $thisEnd),
-            ]);            
+            ));
         }
     }
 
@@ -159,6 +159,6 @@ class Interval
         $interval2Start = clone($interval2->getStart());
         $interval2End = clone($interval2->getEnd());
 
-        return [$interval1Start, $interval1End, $interval2Start, $interval2End];
+        return array($interval1Start, $interval1End, $interval2Start, $interval2End);
     }
 }

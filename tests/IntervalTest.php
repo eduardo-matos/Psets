@@ -114,10 +114,10 @@ class IntervalTest extends PHPUnit_Framework_TestCase
         // expected   -----     -----
         $interval1 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 15:00:00'));
         $interval2 = new Interval($this->_dt('2014-01-01 05:00:00'), $this->_dt('2014-01-01 10:00:00'));
-        $expected = new IntervalSet([
+        $expected = new IntervalSet(array(
             new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 05:00:00')),
             new Interval($this->_dt('2014-01-01 10:00:00'), $this->_dt('2014-01-01 15:00:00')),
-        ]);
+        ));
         $this->assertEquals($expected, $interval1->diff($interval2));
 
     }
@@ -152,10 +152,10 @@ class IntervalTest extends PHPUnit_Framework_TestCase
         // expected   ----- -----
         $interval1 = new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 05:00:00'));
         $interval2 = new Interval($this->_dt('2014-01-01 06:00:00'), $this->_dt('2014-01-01 11:00:00'));
-        $expected = new IntervalSet([
+        $expected = new IntervalSet(array(
             new Interval($this->_dt('2014-01-01 00:00:00'), $this->_dt('2014-01-01 05:00:00')),
             new Interval($this->_dt('2014-01-01 06:00:00'), $this->_dt('2014-01-01 11:00:00')),
-        ]);
+        ));
         $this->assertEquals($expected, $interval1->union($interval2));
         $this->assertEquals($expected, $interval2->union($interval1));
 

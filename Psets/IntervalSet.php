@@ -4,7 +4,7 @@ namespace Psets;
 
 class IntervalSet
 {
-    public $intervals = [];
+    public $intervals = array();
 
     public function __construct($intervals = null)
     {
@@ -13,7 +13,7 @@ class IntervalSet
         }
 
         if(!is_array($intervals)) {
-            $intervals = [$intervals];
+            $intervals = array($intervals);
         }
 
         $orderedIntervals = $this->_order($intervals);
@@ -33,12 +33,12 @@ class IntervalSet
 
     public function diff(IntervalSet $other)
     {
-        $diffs = [];
+        $diffs = array();
         $thisIntervals = $this->intervals;
         $otherIntervals = $other->intervals;
 
         foreach ($thisIntervals as $thisInterval) {
-            $currentDiffs = [];
+            $currentDiffs = array();
 
             foreach ($otherIntervals as $otherInterval) {
                 $result = $thisInterval->diff($otherInterval);
@@ -48,7 +48,7 @@ class IntervalSet
             $diffs[] = $currentDiffs;
         }
 
-        $intervalSetResults = [];
+        $intervalSetResults = array();
         foreach ($diffs as $diffGroup) {
             $groupDiffIntersection = null;
             foreach ($diffGroup as $diff) {
@@ -78,7 +78,7 @@ class IntervalSet
 
     public function intersect(IntervalSet $other)
     {
-        $results = [];
+        $results = array();
         foreach ($this->intervals as $thisInterval) {
             foreach ($other->intervals as $otherInterval) {
                 $currentIntersect = $thisInterval->intersect($otherInterval);
@@ -118,7 +118,7 @@ class IntervalSet
 
     public function _collapse($intervals)
     {
-        $r = [];
+        $r = array();
 
         foreach ($intervals as $key => $interval) {
             if($key === 0) {
